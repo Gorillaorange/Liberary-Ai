@@ -1,0 +1,16 @@
+# Java
+backend/target/
+*.iml
+*.log
+
+# Python
+ai/__pycache__/
+*.pyc
+
+# Node.js
+frontend/node_modules/
+.env
+
+# 数据文件
+*.pth
+*.bin
