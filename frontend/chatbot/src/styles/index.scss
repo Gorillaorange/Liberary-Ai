@@ -1,0 +1,425 @@
+@use "./global";
+@use "./theme";
+@use "./markdown";
+@use "./dark-override";
+@use "nprogress/nprogress.css";
+
+:root {
+  --primary-dark: #1a2333;
+  --secondary-dark: #283447;
+  --text-light: #e6eaf0;
+  --text-light-secondary: #b0b7c3;
+  --accent-color: #4a6fa4;
+  --accent-hover: #5d7eae;
+  --card-bg-dark: rgba(26, 35, 51, 0.8);
+  --card-border-dark: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  width: 100vw;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+  --at-apply: c-#e6eaf0;
+  --at-apply: bg-#121824;
+
+  // 输入框样式
+  .n-input {
+    background-color: var(--secondary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    
+    .n-input__border, .n-input__state-border {
+      border-color: transparent !important;
+    }
+    
+    .n-input__textarea-el, .n-input__input-el {
+      color: var(--text-light) !important;
+      
+      &::placeholder {
+        color: var(--text-light-secondary) !important;
+      }
+    }
+    
+    &:hover, &:focus, &--focus {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(74, 111, 164, 0.3) !important;
+    }
+  }
+  
+  // 选择器样式
+  .n-base-selection {
+    background-color: var(--secondary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    
+    .n-base-selection__border, .n-base-selection__state-border {
+      border-color: transparent !important;
+    }
+    
+    .n-base-selection-input {
+      color: var(--text-light) !important;
+    }
+    
+    .n-base-selection__placeholder {
+      color: var(--text-light-secondary) !important;
+    }
+    
+    &:hover, &--active {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(74, 111, 164, 0.3) !important;
+    }
+  }
+  
+  // 按钮样式
+  .n-button {
+    &:not(.n-button--primary-type) {
+      background-color: rgba(38, 50, 71, 0.6) !important;
+      border: 1px solid var(--card-border-dark) !important;
+      color: var(--text-light) !important;
+      
+      &:hover {
+        background-color: rgba(74, 111, 164, 0.3) !important;
+        border-color: var(--accent-color) !important;
+      }
+      
+      &:active, &:focus {
+        box-shadow: 0 0 0 2px rgba(74, 111, 164, 0.3) !important;
+      }
+    }
+    
+    &.n-button--primary-type {
+      background-color: var(--accent-color) !important;
+      border: none !important;
+      
+      &:hover {
+        background-color: var(--accent-hover) !important;
+      }
+      
+      &:active, &:focus {
+        box-shadow: 0 0 0 2px rgba(74, 111, 164, 0.3) !important;
+      }
+    }
+  }
+  
+  // 滚动条样式
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  // 修复下拉选择框选中状态的样式
+  .n-select-menu, .n-base-select-menu, div[class*="n-base-select-menu"] {
+    background-color: var(--primary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    color: var(--text-light) !important;
+    
+    .n-base-select-option, div[class*="n-base-select-option"] {
+      color: var(--text-light) !important;
+      background-color: transparent !important;
+      
+      &:hover, &.n-base-select-option--pending, &[class*="--pending"] {
+        background-color: rgba(74, 111, 164, 0.3) !important;
+      }
+      
+      &.n-base-select-option--selected, &[class*="--selected"] {
+        color: var(--accent-color) !important;
+        background-color: rgba(74, 111, 164, 0.2) !important;
+      }
+    }
+    
+    // 强制覆盖任何可能的选中状态
+    [class*="--selected"]::after {
+      color: var(--accent-color) !important;
+    }
+  }
+
+  // 为特定组件添加 !important 以确保样式优先级
+  .n-base-select-menu {
+    background-color: var(--primary-dark) !important;
+  }
+
+  .n-base-select-option {
+    &.n-base-select-option--selected {
+      background-color: rgba(74, 111, 164, 0.2) !important;
+    }
+  }
+}
+
+html {
+  font-size: 14px;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  -webkit-tap-highlight-color: rgb(255 255 255 / 0%);
+}
+
+:root {
+  overflow: hidden auto;
+}
+
+:root body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  position: absolute;
+}
+
+#app,
+html {
+  height: 100%;
+}
+
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+blockquote,
+th,
+td,
+hr,
+button,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+menu,
+nav,
+section {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+  outline: none;
+}
+
+svg {
+  box-sizing: content-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+// 滚动条样式
+
+// ::-webkit-scrollbar {
+//   width: 6px;
+//   height: 6px;
+// }
+
+// ::-webkit-scrollbar-thumb {
+//   background: rgba(#000, 0.2);
+//   border-radius: 3px;
+// }
+
+// ::-webkit-scrollbar-track {
+//   background: rgba(#000, 0.06);
+//   border-radius: 3px;
+// }
+
+// https://stackoverflow.com/questions/43778196/input-background-removed-by-chrome-autofill
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -moz-box-shadow: 0 0 0 100px #fff inset;
+  box-shadow: 0 0 0 100px #fff inset;
+}
+
+// 覆盖Naive UI默认样式，使组件适配暗色主题
+:root {
+  // 下拉菜单暗色主题
+  .n-dropdown-menu {
+    background-color: var(--secondary-dark);
+    color: var(--text-light);
+    border: 1px solid var(--card-border-dark);
+    
+    .n-dropdown-option {
+      &:hover {
+        background-color: rgba(74, 111, 164, 0.3);
+      }
+    }
+  }
+  
+  // 对话框暗色主题
+  .n-dialog {
+    background-color: var(--primary-dark);
+    border: 1px solid var(--card-border-dark);
+    
+    .n-dialog__title {
+      color: var(--text-light);
+    }
+    
+    .n-dialog__content {
+      color: var(--text-light-secondary);
+    }
+  }
+  
+  // 通知提示暗色主题
+  .n-notification {
+    background-color: var(--primary-dark);
+    border: 1px solid var(--card-border-dark);
+    
+    .n-notification-main__content {
+      color: var(--text-light-secondary);
+    }
+    
+    .n-notification-main__title {
+      color: var(--text-light);
+    }
+  }
+  
+  // 弹出框暗色主题
+  .n-popover {
+    background-color: var(--primary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    
+    .n-popover__content {
+      color: var(--text-light) !important;
+    }
+  }
+  
+  // 表单暗色主题
+  .n-form-item .n-form-item-label {
+    color: var(--text-light);
+  }
+  
+  // 空状态暗色主题
+  .n-empty {
+    color: var(--text-light-secondary);
+  }
+  
+  // 选择器暗色主题
+  .n-base-selection {
+    background-color: var(--secondary-dark);
+    border-color: var(--card-border-dark);
+    
+    &:hover, &:focus {
+      border-color: var(--accent-color);
+    }
+    
+    .n-base-selection-input {
+      color: var(--text-light);
+    }
+    
+    .n-base-selection-placeholder {
+      color: var(--text-light-secondary);
+    }
+    
+    .n-base-selection-tags {
+      background-color: var(--secondary-dark);
+    }
+  }
+  
+  // 按钮暗色主题
+  .n-button {
+    &.n-button--primary-type {
+      background-color: var(--accent-color);
+      
+      &:hover, &:focus {
+        background-color: var(--accent-hover);
+      }
+    }
+  }
+
+  // 下拉菜单暗色主题
+  .n-base-select-menu {
+    background-color: var(--primary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    color: var(--text-light) !important;
+
+    .n-base-select-option {
+      color: var(--text-light) !important;
+      
+      &:hover, &.n-base-select-option--pending {
+        background-color: rgba(74, 111, 164, 0.3) !important;
+      }
+      
+      &.n-base-select-option--selected {
+        color: var(--accent-color) !important;
+        background-color: rgba(74, 111, 164, 0.2) !important;
+      }
+    }
+    
+    .n-base-select-menu__empty {
+      color: var(--text-light-secondary) !important;
+    }
+    
+    .n-base-select-menu__action {
+      color: var(--text-light) !important;
+      border-top: 1px solid var(--card-border-dark) !important;
+    }
+  }
+
+  .wrapper-tooltip-scroller {
+    background-color: var(--primary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    color: var(--text-light) !important;
+  }
+
+  // 侧边栏收起按钮样式
+  .n-button.sidebar-collapse-btn {
+    background-color: var(--secondary-dark) !important;
+    border: 1px solid var(--card-border-dark) !important;
+    color: var(--text-light) !important;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: var(--accent-color) !important;
+      border-color: var(--accent-color) !important;
+      transform: scale(1.05);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    .icon {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+    
+    &.collapsed .icon {
+      transform: rotate(180deg);
+    }
+  }
+}

@@ -1,0 +1,97 @@
+# 首先忽略所有文件和文件夹
+*
+!*/
+
+# 然后只保留必要文件夹及其内容
+!ai/**
+!backend/**
+!frontend/**
+!infrastructure/**
+!docs/**
+
+# 忽略这些文件夹内的特定文件
+
+# 通用忽略
+**/.DS_Store
+**/Thumbs.db
+**/*.log
+**/.env
+**/.env.*
+!**/.env.example
+**/.vscode/*
+**/.idea/*
+**/processed_ids.json
+
+# Python 相关
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.pytest_cache/
+**/.coverage
+**/.tox/
+**/*.so
+**/venv/
+**/.venv/
+**/env/
+**/.python-version
+**/swanlog/
+
+# Java 相关
+**/target/
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+**/*.iml
+
+# Node.js 相关
+**/node_modules/
+**/.pnpm/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+
+# 数据和模型文件
+**/*.pth
+**/*.bin
+**/*.model
+**/*.ckpt
+**/*.h5
+**/*.whl
+**/*.zip
+**/*.tar
+**/*.gz
+**/*.rar
+**/*.vsix
+
+# 明确排除大文件和依赖目录
+**/offline_packages/
+**/docs/offline_packages/
+**/node_modules/
+**/@iconify/
+**/triton-*
+**/torch-*
+
+# 明确排除特定大型数据文件
+**/dataset*.jsonl
+**/library_data*.jsonl
+**/answer*.jsonl
+**/fine_tuning_dataset.jsonl
+
+# 保留 .gitignore 和必要的配置文件
+!.gitignore
+!.gitattributes
+!README.md
+!requirements.txt
+!package.json
+!package-lock.json
+!backend/backend-ai/pom.xml
+!frontend/chatbot/package.json
+!.github/**
+!Makefile
+!docker-compose.yml
+!**/init.sql

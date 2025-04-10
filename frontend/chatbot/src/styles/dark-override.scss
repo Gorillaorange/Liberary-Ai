@@ -1,0 +1,70 @@
+/**
+ * 暗色主题全局样式覆盖
+ * 这个文件用于强制覆盖Naive UI的默认样式
+ */
+
+// 全局下拉菜单覆盖
+.naive-ui-select-menu,
+.n-base-select-menu,
+.n-select-menu,
+[class*="n-base-select-menu"],
+.n-dropdown-menu,
+div[class*="n-select-menu"] {
+  background-color: var(--primary-dark) !important;
+  border: 1px solid var(--card-border-dark) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  
+  .n-base-select-option,
+  .n-select-option,
+  .n-dropdown-option,
+  [class*="n-base-select-option"],
+  div[class*="n-select-option"] {
+    color: var(--text-light) !important;
+    background-color: transparent !important;
+    
+    &:hover, 
+    &.n-base-select-option--pending,
+    &[class*="--pending"],
+    &.n-dropdown-option--hover {
+      background-color: rgba(74, 111, 164, 0.3) !important;
+    }
+    
+    &.n-base-select-option--selected,
+    &[class*="--selected"],
+    &.n-dropdown-option--selected {
+      color: var(--accent-color) !important;
+      background-color: rgba(74, 111, 164, 0.2) !important;
+    }
+  }
+  
+  .n-base-select-menu__action,
+  .n-select-menu__action,
+  [class*="menu__action"] {
+    color: var(--text-light) !important;
+    background-color: var(--primary-dark) !important;
+    border-top: 1px solid var(--card-border-dark) !important;
+  }
+  
+  .n-base-select-menu__empty,
+  .n-select-menu__empty,
+  [class*="menu__empty"] {
+    color: var(--text-light-secondary) !important;
+  }
+}
+
+// 强制覆盖选中状态的图标颜色
+[class*="--selected"]::after,
+[class*="__arrow"],
+[class*="__checkmark"] {
+  color: var(--accent-color) !important;
+}
+
+// 强制覆盖选中状态的背景色
+div[class*="--selected"],
+div[class*="--active"],
+.n-base-select-option--selected,
+.n-select-option--selected {
+  background-color: rgba(74, 111, 164, 0.2) !important;
+  color: var(--accent-color) !important;
+} 

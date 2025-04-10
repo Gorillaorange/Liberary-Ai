@@ -1,0 +1,10 @@
+// API配置
+
+// API基础URL
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
+// 请求超时时间
+export const REQUEST_TIMEOUT = 30000;
+
+// 请求重试次数
+export const REQUEST_RETRY = 1; 
