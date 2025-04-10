@@ -1,16 +1,66 @@
-# Java
-backend/target/
-*.iml
-*.log
+# 首先忽略所有文件和文件夹
+*
+!*/
 
-# Python
-ai/__pycache__/
-*.pyc
+# 然后只保留 ai, backend 和 frontend 文件夹及其内容
+!ai/**
+!backend/**
+!frontend/**
 
-# Node.js
-frontend/node_modules/
-.env
+# 忽略这些文件夹内的特定文件
 
-# 数据文件
-*.pth
-*.bin
+# 通用忽略
+**/.DS_Store
+**/Thumbs.db
+**/*.log
+**/.env
+**/.env.*
+!**/.env.example
+**/.vscode/*
+**/.idea/*
+
+# Python 相关
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.pytest_cache/
+**/.coverage
+**/.tox/
+**/*.so
+**/venv/
+**/.venv/
+**/env/
+**/.python-version
+
+# Java 相关
+**/target/
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+**/*.iml
+
+# Node.js 相关
+**/node_modules/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+
+# 数据和模型文件
+**/*.pth
+**/*.bin
+**/*.model
+**/*.ckpt
+**/*.h5
+
+# 保留 .gitignore 和必要的配置文件
+!.gitignore
+!.gitattributes
+!README.md
+!requirements.txt
+!package.json
+!package-lock.json
