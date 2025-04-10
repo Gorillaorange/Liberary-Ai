@@ -1,163 +1,344 @@
-# AiLiberary
+# 图书馆AI助手系统
 
-pull test
+![版本](https://img.shields.io/badge/版本-1.0.0-blue)
+![前端](https://img.shields.io/badge/前端-Vue3-brightgreen)
+![后端](https://img.shields.io/badge/后端-SpringBoot-orange)
+![AI](https://img.shields.io/badge/AI-DeepSeek-blueviolet)
 
-### 微调数据样例（JSONL格式）
+## 目录
 
-```json
-{"messages": [
-  {"role": "user", "content": "推荐类似《白夜行》的书籍"},
-  {"role": "assistant", "content": "建议阅读《幻夜》（东野圭吾）和《绝叫》（叶真中显），这些作品都深刻探讨了人性复杂面。借阅期限60天，逾期每天扣5积分"}
-]}
+- [项目概述](#项目概述)
+- [系统架构](#系统架构)
+- [技术栈](#技术栈)
+- [模块说明](#模块说明)
+  - [AI模块](#ai模块)
+  - [后端模块](#后端模块)
+  - [前端模块](#前端模块)
+- [环境配置](#环境配置)
+- [部署指南](#部署指南)
+- [端口配置](#端口配置)
+- [FAQ](#faq)
+- [联系方式](#联系方式)
 
-{"messages": [
-  {"role": "user", "content": "想看推理小说，有什么推荐吗？"},
-  {"role": "assistant", "content": "推荐《嫌疑人X的献身》（东野圭吾）和《ABC谋杀案》（阿加莎）。按时还书每册+1积分"}
-]}
+## 项目概述
 
-{"messages": [
-  {"role": "user", "content": "如何快速获得读者积分？"},
-  {"role": "assistant", "content": "可通过：1）借阅图书（+2分/册）2）提交300字书评（+15分）3）参加读书会（+10分）[1,4](@ref)"}
-]}
+本项目是基于大型语言模型技术的智能图书馆助手系统，旨在为图书馆用户提供智能化的服务体验。系统整合了图书推荐、知识问答、规则咨询、资源预约等功能，通过自然语言交互方式为用户提供便捷高效的图书馆服务。
+
+### 核心功能
+
+- **智能图书推荐**：基于用户兴趣和阅读历史进行个性化图书推荐
+- **图书馆规则咨询**：回答有关借阅规则、积分规则、违规处理的问题
+- **知识问答**：针对特定领域知识提供准确回答
+- **资源预约**：提供座位、储物柜等资源的预约咨询
+
+## 系统架构
+
+![系统架构图](https://via.placeholder.com/800x400?text=Library+AI+System+Architecture)
+
+系统采用前后端分离的微服务架构，分为三大核心模块：
+
+1. **AI服务模块**：负责自然语言处理、模型推理和知识处理
+2. **后端业务模块**：处理业务逻辑、数据存储和API服务
+3. **前端交互模块**：提供用户界面和交互体验
+
+### 数据流向
+
+用户输入内容请求 → 前端处理 → 后端API → FastAPI服务 → AI模型推理 → 数据库查询&内容增强 → 返回前端 → 内容渲染
+
+## 技术栈
+
+### AI模块
+- **核心框架**：FastAPI, Transformers, PyTorch
+- **模型**：DeepSeek-V3, DeepSeek-r1-Distill-Llama-8B (微调版)
+- **向量数据库**：Milvus
+- **其他工具**：Huggingface-Hub, Scikit-learn
+
+### 后端模块
+- **核心框架**：Spring Boot 3.4.3, Spring Security
+- **数据库**：MySQL
+- **API文档**：Swagger
+- **工具库**：Lombok, JWT, MyBatis
+- **通信**：Spring WebFlux (响应式编程)
+
+### 前端模块
+- **核心框架**：Vue 3, Vite
+- **状态管理**：Pinia
+- **UI组件**：Naive UI
+- **CSS工具**：UnoCSS, SCSS
+- **HTTP客户端**：Axios
+- **Markdown渲染**：Markdown-it, Highlight.js
+
+## 模块说明
+
+### AI模块
+
+AI模块是整个系统的核心，负责自然语言处理和模型推理，为用户提供智能化的回答和推荐。
+
+#### 技术实现
+
+- **模型微调**：使用QLoRA技术对DeepSeek-r1-Distill-Llama-8B模型进行微调
+- **流式输出**：基于SSE (Server-Sent Events)实现流式文本生成
+- **文本向量化**：使用嵌入模型将文本转化为向量进行语义检索
+- **知识库管理**：结构化存储图书馆领域知识，支持语义检索
+
+#### 关键目录结构
+```
+ai/
+├── data/              # 数据处理相关
+│   ├── embeddings/    # 嵌入向量模型
+│   ├── tools/         # 数据处理工具
+│   ├── processed/     # 处理后的数据
+│   └── raw/           # 原始数据
+├── models/            # 模型定义
+│   ├── app/           # FastAPI应用
+│   └── base/          # 基础模型接口
+└── LiberaryData/      # 图书馆领域数据
 ```
 
+#### 配置说明
+
+AI服务配置主要通过`.env`文件和环境变量进行设置，关键配置包括：
+
+- **模型路径**：配置本地模型或远程API的路径
+- **向量数据库**：Milvus连接配置
+- **服务参数**：批处理大小、最大长度、温度等推理参数
+
+### 后端模块
+
+后端模块基于Spring Boot框架开发，提供REST API接口，负责业务逻辑处理、用户认证、数据存储等功能。
+
+#### 技术实现
+
+- **响应式编程**：使用Spring WebFlux支持高并发请求处理
+- **安全认证**：基于JWT的用户认证和授权
+- **ORM映射**：使用MyBatis进行对象关系映射
+- **API网关**：处理跨域请求、请求转发和负载均衡
+
+#### 关键目录结构
+```
+backend/
+├── backend-ai/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/org/example/backendai/
+│   │   │   │   ├── config/           # 配置类
+│   │   │   │   ├── controller/       # 控制器
+│   │   │   │   ├── DTO/              # 数据传输对象
+│   │   │   │   ├── entity/           # 实体类
+│   │   │   │   ├── mapper/           # MyBatis映射
+│   │   │   │   ├── service/          # 服务层
+│   │   │   │   └── util/             # 工具类
+│   │   │   └── resources/
+│   │   │       ├── application.properties  # 应用配置
+│   │   │       └── db/                    # SQL脚本
+│   │   └── test/                   # 测试代码
+│   └── pom.xml                    # Maven配置
+└── setup-scripts/                # 环境配置脚本
+```
+
+#### 配置说明
+
+后端服务配置主要在`application.properties`文件中定义：
+
+- **数据库配置**：数据库连接信息
+  ```properties
+  spring.datasource.url=jdbc:mysql://localhost:3306/book_db
+  spring.datasource.username=root
+  spring.datasource.password=5233
+  ```
+- **AI服务配置**：AI模型服务的基础URL
+  ```properties
+  custom-model.api-url=http://localhost:8000/generate
+  custom-model.api-url-base=http://localhost:8000
+  ```
+- **JWT配置**：JWT密钥和过期时间
+  ```properties
+  jwt.secret=E8zxlUd0UJUpQQUUdwPbTJvP2XlLkbUZmTDgE1PbqXxdJcwPk7IlLQn3AcdTqcqLCRDvQZ6yz1UgJD3ZdbwRRR4ZfdjqpEOiJJt2
+  jwt.expiration=86400000  # 24小时
+  ```
+
+### 前端模块
+
+前端模块基于Vue 3开发，提供用户友好的界面和交互体验，支持多种设备适配。
+
+#### 技术实现
+
+- **组件化开发**：基于Vue 3的组件化架构
+- **响应式设计**：适配不同设备屏幕尺寸
+- **Markdown渲染**：支持富文本和Markdown格式内容展示
+- **流式响应**：基于SSE实现打字机效果的流式文本展示
+- **状态管理**：使用Pinia进行全局状态管理
+
+#### 关键目录结构
+```
+frontend/
+└── chatbot/
+    ├── public/              # 静态资源
+    ├── src/
+    │   ├── api/             # API接口
+    │   ├── assets/          # 图片、字体等资源
+    │   ├── components/      # 通用组件
+    │   ├── router/          # 路由配置
+    │   ├── store/           # 状态管理
+    │   ├── styles/          # 全局样式
+    │   ├── utils/           # 工具函数
+    │   └── views/           # 页面视图
+    ├── index.html           # HTML入口
+    ├── package.json         # 依赖配置
+    └── vite.config.ts       # Vite配置
+```
+
+#### 配置说明
+
+前端配置主要通过`.env`文件和`vite.config.ts`进行设置：
+
+- **API基础URL**：后端API服务地址
+  ```
+  VITE_API_BASE_URL=http://localhost:8080
+  ```
+- **构建配置**：打包输出目录和资源引用路径
+- **代理配置**：开发环境的API代理设置
+
+## 环境配置
+
+### 系统要求
+
+- **操作系统**：Windows/Linux/macOS
+- **AI模块**：Python 3.10+
+- **后端模块**：JDK 17, MySQL 8.0+
+- **前端模块**：Node.js 18+, pnpm
+
+### AI环境配置
+
+1. 安装Python 3.10+和依赖包
+   ```bash
+   cd ai
+   pip install -r models/app/requirements.txt
+   ```
+
+2. 配置模型
+   - 使用自己的模型：将模型文件放入相应目录
+   - 使用API：在`.env`文件中配置API地址和密钥
+
+### 后端环境配置
+
+1. 安装JDK 17
+   ```bash
+   # Windows
+   .\backend\install-jdk-windows.bat
+
+   # Linux/macOS
+   chmod +x ./backend/setup-env.sh
+   ./backend/setup-env.sh
+   ```
+
+2. 配置MySQL数据库
+   ```bash
+   # Windows
+   .\backend\setup-database.bat
+
+   # Linux/macOS
+   mysql -u root -p < ./backend/backend-ai/src/main/resources/db/init-user.sql
+   mysql -u root -p < ./backend/backend-ai/src/main/resources/db/init-chat.sql
+   mysql -u root -p < ./backend/backend-ai/src/main/resources/db/init-book-recommendation.sql
+   mysql -u root -p < ./backend/backend-ai/src/main/resources/db/init-user-profile.sql
+   ```
+
+3. 修改数据库连接配置
+   - 路径：`backend/backend-ai/src/main/resources/application.properties`
+
+### 前端环境配置
+
+1. 安装Node.js 18+和pnpm
+   ```bash
+   npm install -g pnpm
+   ```
+
+2. 安装依赖
+   ```bash
+   cd frontend/chatbot
+   pnpm install
+   ```
+
+3. 配置环境变量
+   - 创建`.env.local`文件配置后端API地址
+
+## 部署指南
+
+### AI服务部署
+
+```bash
+cd ai/models/app
+uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
+```
+
+### 后端服务部署
+
+```bash
+# Windows
+cd backend
+.\start-service.bat
+
+# Linux/macOS
+cd backend
+chmod +x ./start-service.sh
+./start-service.sh
+```
+
+### 前端应用部署
+
+#### 开发环境
+```bash
+cd frontend/chatbot
+pnpm dev
+```
+
+#### 生产环境
+```bash
+cd frontend/chatbot
+pnpm build
+# 部署dist目录到Web服务器
+```
+
+## 端口配置
+
+系统各服务的默认端口配置：
+
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| AI服务 | 8000 | FastAPI服务，提供模型推理接口 |
+| 后端服务 | 8080 | Spring Boot应用，提供业务API |
+| 前端开发服务 | 5173 | Vite开发服务器 |
+| MySQL | 3306 | 数据库服务 |
+| Milvus | 19530 | 向量数据库服务（如配置） |
+
+## FAQ
+
+### 常见问题
+
+**Q: 如何更换AI模型？**
+A: 在`.env`文件中修改模型路径配置，或使用API接口方式接入其他模型。
+
+**Q: 如何调整模型回复的风格和内容？**
+A: 可以修改`ai/models/app/configs/prompts.py`中的提示词模板。
+
+**Q: 数据库连接失败怎么办？**
+A: 检查`application.properties`中的数据库配置是否正确，确保MySQL服务正常运行。
+
+**Q: 如何添加新的图书数据？**
+A: 可以通过MySQL客户端直接操作数据库，或开发后台管理界面进行数据维护。
+
+## 联系方式
+
+如有问题或建议，请通过以下方式联系我们：
+- GitHub Issues: [https://github.com/Gorillaorange/Liberary-Ai/issues](https://github.com/Gorillaorange/Liberary-Ai/issues)
+- Email: [your-email@example.com](mailto:your-email@example.com)
+
+## 许可证
+
+[MIT License](LICENSE)
+
+---
+最后更新: 2023年10月31日
 
 
-
-
-prompt_template = """生成图书馆服务对话需包含以下要素：
-[基础要求]
-1. 用户提问需涉及以下至少一个场景：
-   - 图书推荐（需包含3-5本相关书籍）
-   - 积分规则咨询（加分/减分机制）
-   - 违规处理咨询（逾期、损坏等）
-   - 资源预约（座位/储物柜）
-
-[积分规则嵌入]
-
-2. 根据对话场景自动匹配以下条款（使用[数字]引用对应条款）：
-   • 加分机会：
-   
-     - 借阅图书 [条款1.1]
-   
-     - 提交300字书评 [条款1.3]
-   
-     - 参加活动 [条款1.4]
-   
-     • 扣分风险：
-   
-     - 逾期 [条款2.1]
-   
-     - 污损图书 [条款2.2]
-   
-     - 占座违约[条款2.4]
-
-[**外借及归还**规则嵌入]
-
-​	第三条 外借
-
-1．读者须持本人校园卡到图书馆在服务台或自助借还书机办理图书出借手续。不得代借或转借，因代借或转借而造成的后果由校园卡所有人负责。
-
-2．全校教职工、全日制研究生、全日制本/专科生每人均可同时外借30册图书，外借期限为60天。
-
-3．读者外借图书时应当场检查，如发现污损等情况，应及时请工作人员记录处理，以分清责任。读者对所借图书应妥加爱护保管，如有污损、缺页、遗失等情况，按规定赔偿。
-
-4．图书馆特藏图书、外文图书仅供阅览，不予外借。
-
-第四条 归还和续借
-
-1．读者外借图书应按期归还，可在自助借还书机或服务台办理归还手续。
-
-2．图书逾期前如需继续使用，可办理续借手续，可续借 2 次，逾期的图书不得续借。续借手续可自行在网上或自助借还机办理，也可持校园卡到服务台办理。续借周期和原外借周期相同，从续借之日起计算。
-
-3．借出图书到期日如为法定节假日、寒暑假期间及因特殊情况闭馆期间的，则借期顺延至假期结束或开馆之后。
-
-4．读者离校前，应还清全部所借图书。学生毕业离校的，还清图书后才能通过离校审核。持人事部门所发的离校单读者，还清图书后才能到图书馆服务台办理盖章手续。
-
-第五条 催还 
-
-借出图书到期前 3 天和逾期后，图书馆通过短信或微信发送催还通知，读者收到催还通知后应尽快归还所借图书。
-
-[生成规范]
-
-3. 回复需满足：
-   - 规则提醒采用自然语言融入对话
-   - 每个提醒最多包含2个相关条款
-   - 使用emoji分隔主内容和提醒（📚表示书籍推荐，⚠️表示风险提示）
-   - 引用格式：[条款编号](@ref)
-
-示例：
-{"messages": [
-  {"role": "user", "content": "推荐类似《白夜行》的书籍"},
-  {"role": "assistant", "content": "如果您喜欢《白夜行》这样的小说，那么您可能会对以下几部作品感兴趣。这些书籍不仅在情节上引人入胜，而且在人物心理刻画和社会问题探讨方面也有着深刻的表现。
-
-### 东野圭吾的作品
-
-#### 1. 《嫌疑人X的献身》
-
-这部作品是东野圭吾另一部备受赞誉的小说，获得了直木奖。虽然情节与《白夜行》有所不同，但其推理过程非常精巧，结果令人意想不到却又合情合理。故事讲述了一位数学天才为了保护他的邻居而精心策划的一系列事件，展现了人性中的爱与牺牲。
-
-#### 2. 《幻夜》
-
-作为《白夜行》的精神续作，《幻夜》同样聚焦于主角的心理状态以及他们如何面对生活中的困境。尽管有读者认为《幻夜》不如《白夜行》那样出色，但它依然是一个值得探索的故事。书中延续了东野圭吾对于人性复杂性的探讨，尤其是当人们处于极端情况下的选择和行为。
-
-#### 3. 《恶意》
-
-这本书经常被拿来与《白夜行》和《嫌疑人X的献身》相提并论，尽管它可能没有前两者那么震撼人心。然而，《恶意》深入挖掘了人类内心深处的黑暗面——嫉妒与仇恨，并通过一起谋杀案揭示出来。这种对动机的剖析使得整个故事充满了张力。
-
-全校教职工、全日制研究生、全日制本/专科生每人均可同时外借30册图书，外借期限为60天。)"}
-]}
-
-{"messages": [
-  {"role": "user", "content": "想看推理小说，有什么推荐吗？"},
-  {"role": "assistant", "content": "推理小说是一个广受欢迎的文学类型，有许多经典和现代的作品值得一读。以下是一些不同风格和时期的推理小说推荐：
-
-### 经典推理小说
-1. **《福尔摩斯探案集》** - 阿瑟·柯南·道尔
-   - 这是推理小说的经典之作，讲述了侦探夏洛克·福尔摩斯和他的助手华生医生解决各种复杂案件的故事。
-
-2. **《东方快车谋杀案》** - 阿加莎·克里斯蒂
-   - 阿加莎·克里斯蒂是推理小说女王，这本书是她最著名的作品之一，讲述了在东方快车上发生的一起谋杀案，侦探赫尔克里·波洛负责调查。
-
-3. **《无人生还》** - 阿加莎·克里斯蒂
-   - 另一部克里斯蒂的经典作品，讲述了一群人被邀请到一个孤岛上，随后接连发生命案的故事。
-
-### 现代推理小说
-1. **《龙纹身的女孩》** - 斯蒂格·拉森
-   - 这是“千禧年三部曲”的第一部，讲述了记者米卡尔·布洛姆克维斯特和黑客莉丝贝特·萨兰德一起调查一起陈年旧案的故事。
-
-2. **《消失的爱人》** - 吉莉安·弗琳
-   - 这本书讲述了一对夫妻的婚姻生活，妻子突然失踪，丈夫成为主要嫌疑人，但随着调查的深入，真相逐渐浮出水面。
-
-3. **《达·芬奇密码》** - 丹·布朗
-   - 这本书结合了历史、艺术和宗教元素，讲述了符号学家罗伯特·兰登和密码学家索菲·奈芙一起解开一个古老秘密的故事。
-
-### 日本推理小说
-1. **《嫌疑人X的献身》** - 东野圭吾
-   - 这是东野圭吾的代表作之一，讲述了数学天才石神哲哉为了保护邻居母女而精心策划的一起谋杀案。
-
-2. **《白夜行》** - 东野圭吾
-   - 这本书讲述了一对男女从童年到成年的复杂关系，以及他们之间隐藏的黑暗秘密。
-
-3. **《砂之器》** - 松本清张
-   - 这是松本清张的代表作之一，讲述了一起谋杀案背后隐藏的复杂社会问题和人性探讨。
-
-### 其他推荐
-1. **《玫瑰的名字》** - 翁贝托·埃科
-   - 这本书结合了历史、哲学和推理元素，讲述了中世纪修道院中发生的一系列神秘死亡事件。
-
-2. **《八百万种死法》** - 劳伦斯·布洛克
-   - 这是马修·斯卡德系列的第一部，讲述了私家侦探马修·斯卡德调查一起连环杀人案的故事。
-
-3. **《漫长的告别》** - 雷蒙德·钱德勒
-   - 这是菲利普·马洛系列的一部经典作品，讲述了私家侦探菲利普·马洛调查一起复杂案件的故事。
-
-这些推理小说各具特色，适合不同口味的读者。希望你能找到自己喜欢的作品，享受阅读的乐趣！按时还书每册+1积分[1,7](@ref)"}
-]}
-
-{"messages": [
-  {"role": "user", "content": "如何快速获得读者积分？"},
-  {"role": "assistant", "content": "可通过：1）借阅图书 2）提交300字书评（3）参加读书会 1,4](@ref)"}
-]}
-
-"""
