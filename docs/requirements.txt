@@ -1,0 +1,14 @@
+
+transformers==4.30.0
+peft==0.4.0
+datasets==2.0.0
+accelerate==0.21.0
+bitsandbytes==0.41.1
+safetensors==0.3.1
+protobuf==3.20.0
+tqdm==4.0.0
+matplotlib==3.7.0
+numpy==1.23.5
+pillow==9.5.0
+packaging==21.3
+python-dateutil==2.8.2

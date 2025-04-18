@@ -1,0 +1,50 @@
+/* 全局样式覆盖文件 - 使用最高优先级选择器 */
+
+/* 所有下拉框相关样式覆盖 */
+#app div.n-base-select-menu,
+#app div.n-select-menu,
+#app div[class^="n-base-select-menu"],
+#app div[class^="n-select-menu"],
+body > div[class*="n-base-select-menu"],
+body > div[class*="n-select-menu"] {
+  background-color: #1a2333 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #e6eaf0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+#app div.n-base-select-option,
+#app div[class^="n-base-select-option"],
+#app div[class^="n-select-option"],
+body > div[class*="n-base-select-menu"] div[class^="n-base-select-option"],
+body > div[class*="n-select-menu"] div[class^="n-select-option"] {
+  color: #e6eaf0 !important;
+  background-color: transparent !important;
+}
+
+#app div.n-base-select-option:hover,
+#app div[class^="n-base-select-option"]:hover,
+#app div.n-base-select-option--pending,
+#app div[class^="n-base-select-option"][class*="--pending"],
+body > div[class*="n-base-select-menu"] div[class^="n-base-select-option"]:hover,
+body > div[class*="n-select-menu"] div[class^="n-select-option"]:hover,
+body > div[class*="n-base-select-menu"] div[class^="n-base-select-option"][class*="--pending"],
+body > div[class*="n-select-menu"] div[class^="n-select-option"][class*="--pending"] {
+  background-color: rgba(74, 111, 164, 0.3) !important;
+}
+
+#app div.n-base-select-option--selected,
+#app div[class^="n-base-select-option"][class*="--selected"],
+body > div[class*="n-base-select-menu"] div[class^="n-base-select-option"][class*="--selected"],
+body > div[class*="n-select-menu"] div[class^="n-select-option"][class*="--selected"] {
+  color: #4a6fa4 !important;
+  background-color: rgba(74, 111, 164, 0.2) !important;
+}
+
+/* 图标/选中状态强制覆盖 */
+#app [class*="--selected"]::after,
+#app [class*="__checkmark"],
+body > div [class*="--selected"]::after,
+body > div [class*="__checkmark"] {
+  color: #4a6fa4 !important;
+} 
