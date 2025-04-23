@@ -332,13 +332,13 @@ A: 可以通过MySQL客户端直接操作数据库，或开发后台管理界面
 
 如有问题或建议，请通过以下方式联系我们：
 - GitHub Issues: [https://github.com/Gorillaorange/Liberary-Ai/issues](https://github.com/Gorillaorange/Liberary-Ai/issues)
-- Email: [your-email@example.com](mailto:your-email@example.com)
+- Email: cxxddcz@163.com
 
 ## 许可证
 
 [MIT License](LICENSE)
 
 ---
-最后更新: 2023年10月31日
+最后更新: 2025年4月10日
 
 
